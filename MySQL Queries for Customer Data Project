@@ -1,0 +1,42 @@
+SELECT * FROM customer_data.customers;
+
+-- Removing duplicates from the customer table
+
+SET SQL_SAFE_UPDATES = 0;
+
+DELETE c1
+FROM customers c1
+JOIN (
+    SELECT MIN(Customer_ID) AS Customer_ID
+    FROM customers
+    GROUP BY Email
+) c2
+ON c1.Customer_ID = c2.Customer_ID
+WHERE c1.Customer_ID != c2.Customer_ID;
+
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+-- Grouping by region and calculating average purchase amount
+
+SELECT Region, AVG(Purchase_Amount) AS avg_purchase
+FROM customers
+GROUP BY Region;
+
+-- Finding top customers by total spending
+
+SELECT Customer_ID, Name, SUM(Purchase_Amount) AS total_spending
+FROM customers
+GROUP BY Customer_ID, Name
+ORDER BY total_spending DESC
+LIMIT 5;
+
+--Customer Distribution by Region
+
+SELECT Region, COUNT(*) AS Customer_Count
+FROM Customers
+GROUP BY Region
+ORDER BY Customer_Count DESC;
+
+
